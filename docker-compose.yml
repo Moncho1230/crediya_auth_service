@@ -4,7 +4,7 @@ services:
     container_name: postgres17_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: "autenticacion"
+      POSTGRES_DB: "auth_user"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "1234"
     ports:

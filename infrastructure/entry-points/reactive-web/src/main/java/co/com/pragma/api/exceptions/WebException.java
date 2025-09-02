@@ -1,4 +1,4 @@
-package co.com.pragma.api.exception;
+package co.com.pragma.api.exceptions;
 
 public class WebException extends RuntimeException {
     public final ErrorCode code;

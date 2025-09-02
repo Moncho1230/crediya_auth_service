@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
-public class RoleRequesDto {
+public class RoleRequestDto {
     @NotBlank(message = "{role.name.required}")
     private String name;
 

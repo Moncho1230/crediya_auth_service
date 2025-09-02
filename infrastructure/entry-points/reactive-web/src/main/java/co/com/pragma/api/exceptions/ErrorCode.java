@@ -1,4 +1,4 @@
-package co.com.pragma.api.exception;
+package co.com.pragma.api.exceptions;
 
 import org.springframework.http.HttpStatus;
 

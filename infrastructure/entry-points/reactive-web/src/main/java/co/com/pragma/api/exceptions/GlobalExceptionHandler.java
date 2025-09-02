@@ -1,4 +1,4 @@
-package co.com.pragma.api.exception;
+package co.com.pragma.api.exceptions;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;

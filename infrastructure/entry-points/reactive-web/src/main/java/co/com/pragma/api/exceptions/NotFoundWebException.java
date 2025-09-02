@@ -1,4 +1,4 @@
-package co.com.pragma.api.exception;
+package co.com.pragma.api.exceptions;
 
 public class NotFoundWebException extends WebException {
     public NotFoundWebException(String messageKey, Object... args) {

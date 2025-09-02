@@ -2,7 +2,7 @@ server:
   port: 8080
 spring:
   application:
-    name: "crediya_auth_service"
+    name: "crediya_auth"
   devtools:
     add-properties: false
   h2:
@@ -22,3 +22,14 @@ management:
         enabled: true
 cors:
   allowed-origins: "http://localhost:4200,http://localhost:8080"
+routes:
+  paths:
+    users: "/api/v1/users"
+adapters:
+  r2dbc:
+    host: "localhost"
+    port: 5434
+    database: "autentificacion"
+    schema: "public"
+    username: "postgres"
+    password: "1234"
