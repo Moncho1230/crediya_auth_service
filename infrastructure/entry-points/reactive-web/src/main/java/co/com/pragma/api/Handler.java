@@ -2,7 +2,6 @@ package co.com.pragma.api;
 
 import co.com.pragma.api.dto.UserRequestDto;
 import co.com.pragma.api.exceptions.NotFoundWebException;
-import co.com.pragma.api.exceptions.WebException;
 import co.com.pragma.api.mapper.UserDtoMapper;
 import co.com.pragma.usecase.user.UserUseCase;
 import jakarta.validation.Validator;
@@ -17,10 +16,6 @@ import java.net.URI;
 
 @Component
 @RequiredArgsConstructor
-/**
- * Clase Handler para gestionar solicitudes HTTP relacionadas con usuarios en la capa web reactiva.
- * Proporciona endpoints para el registro y la consulta de usuarios.
- */
 public class Handler {
 private  final UserUseCase useCase;
 private final UserDtoMapper mapper;
@@ -46,18 +41,6 @@ private final Validator validator;
                         .contentType(MediaType.APPLICATION_JSON)
                         .bodyValue(dto));
 
-    }
-
-    /**
-     * Consulta todos los usuarios.
-     * <p>
-     * Retorna una respuesta JSON que contiene la lista de usuarios.
-     *
-     * @param serverRequest la solicitud entrante
-     * @return un {@link Mono} que emite la respuesta del servidor con la lista de usuarios
-     */
-    public Mono<ServerResponse> getUsers (ServerRequest serverRequest) {
-        return ServerResponse.ok().bodyValue("");
     }
 
     /**

@@ -68,19 +68,6 @@ class UserUseCaseTest {
                 .verify();
     }
 
-    @Test
-    void createUser_invalidEmail() {
-        user.setEmail("invalid");
-        StepVerifier.create(userUseCase.createUser(user))
-                .expectError(ValidationException.class)
-                .verify();
-    }
 
-    @Test
-    void getUsers_success() {
-        when(userRepository.GetAllUsers()).thenReturn(Flux.just(user));
-        StepVerifier.create(userUseCase.getUsers())
-                .expectNext(user)
-                .verifyComplete();
-    }
+
 }

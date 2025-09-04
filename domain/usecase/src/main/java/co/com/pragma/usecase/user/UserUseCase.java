@@ -38,9 +38,6 @@ public class UserUseCase {
             );
     }
 
-    public Flux<User> getUsers() {
-        return userRepository.GetAllUsers();
-    }
 
     /**
      * Valida el objeto usuario para campos requeridos, formato de email y restricciones de balance.

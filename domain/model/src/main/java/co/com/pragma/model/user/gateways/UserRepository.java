@@ -8,5 +8,4 @@ public interface UserRepository {
 
     Mono<User> CreateUser(User user);
     Mono<Boolean> UserExistsByEmail(String email);
-    Flux<User> GetAllUsers();
 }
