@@ -5,9 +5,9 @@ import lombok.Data;
 
 @Data
 public class RoleRequestDto {
-    @NotBlank(message = "{role.name.required}")
+    @NotBlank
     private String name;
 
-    @NotBlank(message = "{role.description.required}")
+    @NotBlank
     private String description;
 }

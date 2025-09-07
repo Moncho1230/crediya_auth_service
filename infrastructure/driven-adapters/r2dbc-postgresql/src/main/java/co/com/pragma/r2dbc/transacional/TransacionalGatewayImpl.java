@@ -1,4 +1,4 @@
-package co.com.pragma.r2dbc;
+package co.com.pragma.r2dbc.transacional;
 
 import co.com.pragma.model.shared.gateways.TransacionalGateway;
 import org.springframework.stereotype.Component;

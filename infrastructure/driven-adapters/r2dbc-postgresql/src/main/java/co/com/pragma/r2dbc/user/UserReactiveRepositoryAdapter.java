@@ -1,8 +1,8 @@
-package co.com.pragma.r2dbc;
+package co.com.pragma.r2dbc.user;
 
 import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.gateways.UserRepository;
-import co.com.pragma.r2dbc.entity.UserEntity;
+import co.com.pragma.r2dbc.user.entity.UserEntity;
 import co.com.pragma.r2dbc.helper.ReactiveAdapterOperations;
 import org.reactivecommons.utils.ObjectMapper;
 import org.springframework.stereotype.Repository;
@@ -18,8 +18,22 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
 
 
     @Override
-    public Mono<Boolean> existsByEmail(String email) {
-        return repository.existsByEmail(email);
+    public Mono<User> findByEmail(String email) {
+        return repository.findByEmail(email);
     }
 
+    @Override
+    public Mono<Boolean> existsByEmailOrDocument(String email, String document) {
+        return repository.existsByEmailOrDocument(email, document);
+    }
+
+    @Override
+    public Mono<Boolean> existsByEmailAndDocument(String email, String document) {
+        return repository.existsByEmailAndDocument(email, document);
+    }
+
+    @Override
+    public Mono<String> findRoleNameByEmail(String email) {
+        return repository.findRoleNameByEmail(email);
+    }
 }

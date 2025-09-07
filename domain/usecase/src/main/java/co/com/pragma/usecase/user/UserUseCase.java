@@ -1,14 +1,18 @@
 package co.com.pragma.usecase.user;
 
-import co.com.pragma.model.shared.exceptions.AlreadyExistsException;
-import co.com.pragma.model.shared.exceptions.ValidationException;
+import co.com.pragma.model.exceptions.BusinessException;
+import co.com.pragma.model.role.gateways.RoleRepository;
+import co.com.pragma.model.shared.exceptions.BusinessErrorCode;
 import co.com.pragma.model.user.User;
+import co.com.pragma.model.user.gateways.PasswordCryptoGateway;
 import co.com.pragma.model.user.gateways.UserRepository;
 import co.com.pragma.model.shared.gateways.TransacionalGateway;
 import lombok.RequiredArgsConstructor;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.regex.Pattern;
+import java.util.UUID;
+
 
 /**
  * Caso de uso para la lógica de negocio relacionada con usuarios.
@@ -18,8 +22,37 @@ import java.util.regex.Pattern;
 public class UserUseCase {
 
     private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
     private final TransacionalGateway transacionalGateway;
-    String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+    private final PasswordCryptoGateway passwordCryptoGateway;
+
+
+    public Mono<User> findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.USER_DOES_NOT_EXIST)));
+    }
+
+    public Mono<String> findRoleNameByEmail(String email) {
+        return userRepository.findRoleNameByEmail(email)
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.USER_DOES_NOT_EXIST)));
+    }
+
+    public Mono<Boolean> existsByEmailAndDocument(String email, String document) {
+        return userRepository.existsByEmailAndDocument(email, document)
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.USER_DOES_NOT_EXIST)));
+    }
+
+    public Flux<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    public Mono<User> validateCredentials(String email, String password) {
+        return this.findByEmail(email)
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.USER_DOES_NOT_EXIST)))
+                .filter(user -> passwordCryptoGateway.matches(password, user.getPassword()))
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.INVALID_CREDENTIALS)));
+
+    }
 
     /**
      * Crea un nuevo usuario después de validar y verificar su existencia.
@@ -28,37 +61,17 @@ public class UserUseCase {
      * @param user el usuario a crear
      * @return un Mono que emite el usuario creado o un error si la validación falla o el usuario ya existe
      */
-    public Mono<User> createUser(User user) {
-        return validate(user)
-            .then(userRepository.existsByEmail(user.getEmail()))
-            .flatMap(exists -> exists
-                ? Mono.error(AlreadyExistsException.email(user.getEmail()))
-                : transacionalGateway.executeInTransaction(userRepository.save(user))
-            );
+    public Mono<User> save(User user, String role) {
+        return userRepository.existsByEmailOrDocument(user.getEmail(), user.getDocument())
+                .filter(exists -> !exists)
+                .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.USER_ALREADY_EXISTS)))
+                .then(roleRepository.findByName(role)
+                        .switchIfEmpty(Mono.error(new BusinessException(BusinessErrorCode.ROLE_DOES_NOT_EXIST))))
+                .map(roleRetrieved -> user.toBuilder()
+                        .roleId(roleRetrieved.getRoleId())
+                        .password(passwordCryptoGateway.encode(user.getPassword()))
+                        .build())
+                .flatMap(u -> transacionalGateway.executeInTransaction(userRepository.save(u)));
     }
 
-
-    /**
-     * Valida el objeto usuario para campos requeridos, formato de email y restricciones de balance.
-     *
-     * @param user el usuario a validar
-     * @return un Mono que completa si es válido o emite una ValidationException
-     */
-    public Mono<Void> validate(User user) {
-        return Mono.justOrEmpty(user)
-            .switchIfEmpty(Mono.error(ValidationException.userRequired()))
-            .flatMap(u -> Pattern.matches(emailRegex, u.getEmail())
-                ? Mono.just(u)
-                : Mono.error(ValidationException.invalidEmail()))
-                .flatMap(u -> u.getBalance() == null
-                        ? Mono.error(ValidationException.negativeBalance())
-                        : Mono.just(u))
-            .flatMap(u -> u.getBalance() < 0
-                ? Mono.error(ValidationException.negativeBalance())
-                : Mono.just(u))
-            .flatMap(u -> u.getBalance() > 15000000
-                ? Mono.error(ValidationException.maxBalanceExceeded())
-                : Mono.just(u))
-            .then();
-    }
 }

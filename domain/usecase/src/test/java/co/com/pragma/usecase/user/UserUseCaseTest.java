@@ -1,7 +1,5 @@
 package co.com.pragma.usecase.user;
 
-import co.com.pragma.model.shared.exceptions.AlreadyExistsException;
-import co.com.pragma.model.shared.exceptions.ValidationException;
 import co.com.pragma.model.shared.gateways.TransacionalGateway;
 import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.gateways.UserRepository;
@@ -10,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 

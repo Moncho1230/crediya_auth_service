@@ -1,11 +1,11 @@
-package co.com.pragma.r2dbc.entity;
+package co.com.pragma.r2dbc.role.entity;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDate;
+import java.util.UUID;
 
 @Table("roles")
 @AllArgsConstructor
@@ -16,7 +16,7 @@ import java.time.LocalDate;
 public class RoleEntity {
     @Id
     @Column("role_id")
-    private Integer id;
+    private UUID roleId;
     @Column("name")
     private String name;
     @Column("description")
