@@ -16,7 +16,9 @@ import java.time.LocalDate;
 public class RoleEntity {
     @Id
     @Column("role_id")
-    private String id;
+    private Integer id;
+    @Column("name")
     private String name;
-    private String descriotion;
+    @Column("description")
+    private String description;
 }

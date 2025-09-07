@@ -7,11 +7,11 @@ import java.time.LocalDate;
 public class UserResponseDto {
   
     private String name;
-    private String lastname;
+    private String lastName;
     private LocalDate birthdate;
     private String address;
     private String email;
-    private String role_id;
+    private String roleId;
     private Integer balance;
 
 }

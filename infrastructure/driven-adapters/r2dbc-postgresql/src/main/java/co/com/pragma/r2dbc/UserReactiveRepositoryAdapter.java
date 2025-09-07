@@ -13,16 +13,13 @@ public class UserReactiveRepositoryAdapter extends ReactiveAdapterOperations<
     User, UserEntity, String, UserReactiveRepository
 > implements UserRepository {
     public UserReactiveRepositoryAdapter(UserReactiveRepository repository, ObjectMapper mapper) {
-        super(repository, mapper, d -> mapper.map(d, User.class/* change for domain model */));
+        super(repository, mapper, d -> mapper.map(d, User.class));
     }
 
-    @Override
-    public Mono<User> CreateUser(User user) {
-        return null;
-    }
 
     @Override
-    public Mono<Boolean> UserExistsByEmail(String email) {
-        return null;
+    public Mono<Boolean> existsByEmail(String email) {
+        return repository.existsByEmail(email);
     }
+
 }

@@ -1,7 +1,6 @@
 package co.com.pragma.r2dbc.entity;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -14,18 +13,25 @@ import java.time.LocalDate;
 @Setter
 @Builder
 public class UserEntity {
-    @Id
-    @Column("user_id")
+    @Column("id")
     private String id;
+    @Column("name")
     private String name;
+    @Column("password")
     private String password;
-    private String lastname;
+    @Column("lastname")
+    private String lastName;
+    @Column("birthdate")
     private LocalDate birthdate;
+    @Column("address")
     private String address;
+    @Column("email")
     private String email;
-    private String identity_document;
-    private String phone_number;
-    private String role_id;
+    @Column("phonenumber")
+    private String phoneNumber;
+    @Column("roleid")
+    private Integer roleId;
+    @Column("balance")
     private Integer balance;
 
 }

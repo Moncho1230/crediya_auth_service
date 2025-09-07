@@ -1,5 +1,7 @@
 package co.com.pragma.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import co.com.pragma.api.dto.UserRequestDto;
 import co.com.pragma.api.exceptions.NotFoundWebException;
 import co.com.pragma.api.mapper.UserDtoMapper;
@@ -30,18 +32,30 @@ private final Validator validator;
      * @param serverRequest la solicitud entrante que contiene los datos del usuario
      * @return un {@link Mono} que emite la respuesta del servidor con el usuario creado o detalles del error
      */
+
+
+    // Add this at the top of your class
+    private static final Logger log = LoggerFactory.getLogger(Handler.class);
+
     public Mono<ServerResponse> registerUser(ServerRequest serverRequest) {
         return serverRequest.bodyToMono(UserRequestDto.class)
+                .doOnSubscribe(s -> log.info("Request received"))
+                .doOnNext(dto -> log.info("DTO parsed: {}", dto))
                 .switchIfEmpty(Mono.error(new NotFoundWebException("user.not_found")))
                 .doOnNext(this::validate)
+                .doOnSuccess(dto -> log.info("DTO validated"))
                 .map(mapper::toUser)
+                .doOnNext(user -> log.info("Mapped to domain: {}", user))
                 .flatMap(useCase::createUser)
+                .doOnNext(user -> log.info("User created: {}", user))
                 .map(mapper::toResponse)
-                .flatMap(dto -> ServerResponse.created(URI.create("/api/v1/users" ))
+                .doOnNext(resp -> log.info("Mapped to response: {}", resp))
+                .flatMap(dto -> ServerResponse.created(URI.create("/api/v1/users"))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .bodyValue(dto));
-
+                        .bodyValue(dto))
+                .doOnError(e -> log.error("Error in registerUser", e));
     }
+
 
     /**
      * Valida el objeto dado usando el {@link Validator} inyectado.

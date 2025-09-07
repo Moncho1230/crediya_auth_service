@@ -6,7 +6,6 @@ import co.com.pragma.model.user.User;
 import co.com.pragma.model.user.gateways.UserRepository;
 import co.com.pragma.model.shared.gateways.TransacionalGateway;
 import lombok.RequiredArgsConstructor;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.regex.Pattern;
@@ -31,10 +30,10 @@ public class UserUseCase {
      */
     public Mono<User> createUser(User user) {
         return validate(user)
-            .then(userRepository.UserExistsByEmail(user.getEmail()))
+            .then(userRepository.existsByEmail(user.getEmail()))
             .flatMap(exists -> exists
                 ? Mono.error(AlreadyExistsException.email(user.getEmail()))
-                : transacionalGateway.executeInTransaction(userRepository.CreateUser(user))
+                : transacionalGateway.executeInTransaction(userRepository.save(user))
             );
     }
 
@@ -51,6 +50,9 @@ public class UserUseCase {
             .flatMap(u -> Pattern.matches(emailRegex, u.getEmail())
                 ? Mono.just(u)
                 : Mono.error(ValidationException.invalidEmail()))
+                .flatMap(u -> u.getBalance() == null
+                        ? Mono.error(ValidationException.negativeBalance())
+                        : Mono.just(u))
             .flatMap(u -> u.getBalance() < 0
                 ? Mono.error(ValidationException.negativeBalance())
                 : Mono.just(u))
