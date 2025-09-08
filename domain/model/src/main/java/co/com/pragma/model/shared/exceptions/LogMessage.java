@@ -12,6 +12,7 @@ public enum LogMessage{
     IS_VALID_EMAIL("Checking if email is valid");
 
 
+
     private final String message;
 
     LogMessage(String message) {

@@ -6,5 +6,5 @@ import reactor.core.publisher.Mono;
 public interface AuthRepository {
     Mono<String> generateToken(AuthUser authUser);
     Mono<AuthUser> validateToken(String token);
-    Mono<Boolean> isEmailEqualToToken(String email);
+    Mono<String> getTokenEmail();
 }

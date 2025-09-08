@@ -5,6 +5,7 @@ import lombok.Getter;
 public enum ResponseCode implements ResponseMessage{
     USER_CREATED("USR_001","User created successfully"),
     USER_ALREADY_EXISTS("USR_002","User already exists"),
+    USER_EXISTS("USR_003","User exists"),
     TOKEN_GENERATED("AUT_001","Token generated successfully"),
     CORRECT_EMAIL("EML_001","The email is correct"),
     ROLE_FOUND("ROL_001","Role found successfully");

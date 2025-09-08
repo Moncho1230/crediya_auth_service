@@ -27,6 +27,11 @@ public class AuthUseCase {
     }
 
     public Mono<Boolean> isEmailEqualToToken(String email) {
-        return authRepository.isEmailEqualToToken(email);
+        return authRepository.getTokenEmail()
+                .map(token -> token.equals(email));
+    }
+
+    public Mono<String> getRoleByAuthHeader(){
+        return authRepository.getTokenEmail();
     }
 }

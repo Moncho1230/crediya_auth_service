@@ -1,5 +1,5 @@
 server:
-  port: 8081  # <-- puerto propio del microservicio de autenticación
+  port: 8081
 
 spring:
   application:
@@ -8,7 +8,7 @@ spring:
     add-properties: false
   h2:
     console:
-      enabled: false            # opcional: desactiva H2 si no lo usas
+      enabled: false
   profiles:
     include: null
 
@@ -32,9 +32,15 @@ cors:
 
 routes:
   paths:
-    users: "/api/v1/users"
+    users:
+      users: "/api/v1/users"
+      findByEmail: "/api/v1/usuarios/{email}"
+      existsByEmailAndDocument: "/api/v1/usuarios/exists"
+    auth:
+      login: "/api/v1/login"
+      isEmailEqualToToken: "/api/v1/auth/equal-email"
+      roleByAuthHeaderToken: "/api/v1/auth/role"
 
-# Mantengo también tus propiedades personalizadas (si tu adapter las usa)
 adapters:
   r2dbc:
     host: "localhost"
@@ -43,3 +49,6 @@ adapters:
     schema: "public"
     username: "postgres"
     password: "1234"
+jwt:
+  secret: uFI2TjnGi3wC9pzQ3urYEyreDGDiYtYoBNelOQRclVzcmJTRDPOSUyY3HrLQGhw5
+  expirationMinutes: 400
