@@ -33,7 +33,7 @@ cors:
 routes:
   paths:
     users:
-      users: "/api/v1/users"
+      users: "/api/v1/usuarios"
       findByEmail: "/api/v1/usuarios/{email}"
       existsByEmailAndDocument: "/api/v1/usuarios/exists"
     auth:
@@ -51,4 +51,4 @@ adapters:
     password: "1234"
 jwt:
   secret: uFI2TjnGi3wC9pzQ3urYEyreDGDiYtYoBNelOQRclVzcmJTRDPOSUyY3HrLQGhw5
-  expirationMinutes: 400
+  expiredMinutes: 400

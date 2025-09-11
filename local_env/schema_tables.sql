@@ -6,7 +6,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 CREATE TABLE IF NOT EXISTS public.users
 (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
-    last_name character varying COLLATE pg_catalog."default" NOT NULL,
+    lastname character varying COLLATE pg_catalog."default" NOT NULL,
     address character varying COLLATE pg_catalog."default",
     phone_number character varying COLLATE pg_catalog."default",
     email character varying COLLATE pg_catalog."default" NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS public.users
         INCLUDE(document)
 );
 
-CREATE TABLE IF NOT EXISTS public.rol
+CREATE TABLE IF NOT EXISTS public.roles
 (
     role_id uuid NOT NULL DEFAULT gen_random_uuid(),
     name character varying COLLATE pg_catalog."default" NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS public.rol
 
 ALTER TABLE IF EXISTS public.users
     ADD CONSTRAINT role_id FOREIGN KEY (role_id)
-    REFERENCES public.rol (role_id) MATCH SIMPLE
+    REFERENCES public.roles (role_id) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;

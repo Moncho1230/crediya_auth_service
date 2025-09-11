@@ -19,6 +19,6 @@ public class PasswordCryptoGatewayAdapter implements PasswordCryptoGateway {
 
     @Override
     public Boolean matches(String encodedPassword, String rawPassword) {
-        return encoder.matches(rawPassword, encodedPassword);
+        return encoder.matches(encodedPassword, rawPassword);
     }
 }

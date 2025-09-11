@@ -14,7 +14,7 @@ import java.util.UUID;
 @Setter
 @Builder
 public class UserEntity {
-    @Column("user_id")
+    @Column("id")
     private UUID id;
     @Column("name")
     private String name;
@@ -30,7 +30,7 @@ public class UserEntity {
     private String address;
     @Column("email")
     private String email;
-    @Column("phonenumber")
+    @Column("phone_number")
     private String phoneNumber;
     @Column("role_id")
     private UUID roleId;

@@ -32,7 +32,7 @@ public class SecurityConfig {
                 .authorizeExchange(exchange ->
                         exchange
                                 .pathMatchers(HttpMethod.POST, userPath.getUsers()).hasAnyRole(Roles.ADVISER.getValue(), Roles.ADMIN.getValue())
-                                .pathMatchers(userPath.getExistsByEmailAndDocument()).hasRole(Roles.CLIENT.getValue())
+                                .pathMatchers(userPath.getExistsByEmailAndDocument()).hasAnyRole(Roles.CLIENT.getValue(), Roles.ADVISER.getValue())
                                 .pathMatchers(authPath.getRoleByAuthHeaderToken()).hasRole(Roles.ADVISER.getValue())
                                 .pathMatchers(authPath.getIsEmailEqualToToken()).hasAnyRole(Roles.CLIENT.getValue(), Roles.ADMIN.getValue(), Roles.ADVISER.getValue())
                                 .pathMatchers(authPath.getLogin()).permitAll()
