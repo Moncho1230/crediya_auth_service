@@ -1,0 +1,45 @@
+version: "3.9"
+
+networks:
+  backend:
+    name: crediya_net         # usa la red externa creada
+    external: true
+
+volumes:
+  auth_pg:
+
+services:
+  postgres-auth:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: auth_user
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "1234"
+    ports:
+      - "5435:5432"           # opcional, para acceder desde host
+    volumes:
+      - auth_pg:/var/lib/postgresql/data
+    networks: [backend]
+    container_name: postgres-auth
+
+  auth-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: crediya/auth-service:local
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      SERVER_PORT: 8081
+      SPRING_R2DBC_URL: r2dbc:postgresql://postgres-auth:5432/auth_user
+      SPRING_R2DBC_USERNAME: postgres
+      SPRING_R2DBC_PASSWORD: "1234"
+      CORS_ALLOWED_ORIGINS: "http://localhost:4200,http://localhost:8081"
+      JWT_SECRET: "uFI2TjnGi3wC9pzQ3urYEyreDGDiYtYoBNelOQRclVzcmJTRDPOSUyY3HrLQGhw5"
+      JWT_EXPIREDMINUTES: "400"
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres-auth
+    networks: [backend]
+    container_name: auth-service
